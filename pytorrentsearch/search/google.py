@@ -16,8 +16,6 @@ def query_results(query: str, page=1):
         status("Fetching Google result page...")
         search_url = f"https://www.google.com/search?q={quote(query)}&start={(page-1)*20}"  # noqa: E501
         content = get_url_content(search_url)
-        with open("/tmp/preview.html", "w") as f:
-            f.write(content)
         page_links = set()
         for link in LINK_REGEXP.findall(content):
             if link.startswith("/url"):

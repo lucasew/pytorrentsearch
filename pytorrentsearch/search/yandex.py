@@ -16,8 +16,6 @@ def query_results(query: str, page=1):
         status("Fetching Yandex result page...")
         search_url = f"https://yandex.com/search?text={quote(query)}&p={page}"
         content = get_url_content(search_url)
-        with open("/tmp/preview.html", "w") as f:
-            f.write(content)
         page_links = set()
         for link in LINK_REGEXP.findall(content):
             # if link.startswith("http"):
