@@ -32,11 +32,11 @@ def read_requirements(path):
 setup(
     name="pytorrentsearch",
     version=read("pytorrentsearch", "VERSION"),
-    description="Awesome pytorrentsearch created by lucasew",
-    url="https://github.com/lucasew/pytorrentsearch/",
+    description="No distraction way to find torrents",
+    url="https://github.com//pytorrentsearch/",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
-    author="lucasew",
+    author="",
     packages=find_packages(exclude=["tests", ".github"]),
     install_requires=read_requirements("requirements.txt"),
     entry_points={

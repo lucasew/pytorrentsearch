@@ -53,10 +53,10 @@ See also
 ---
 # pytorrentsearch
 
-[![codecov](https://codecov.io/gh/lucasew/pytorrentsearch/branch/main/graph/badge.svg?token=pytorrentsearch_token_here)](https://codecov.io/gh/lucasew/pytorrentsearch)
-[![CI](https://github.com/lucasew/pytorrentsearch/actions/workflows/main.yml/badge.svg)](https://github.com/lucasew/pytorrentsearch/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh//pytorrentsearch/branch/main/graph/badge.svg?token=pytorrentsearch_token_here)](https://codecov.io/gh//pytorrentsearch)
+[![CI](https://github.com//pytorrentsearch/actions/workflows/main.yml/badge.svg)](https://github.com//pytorrentsearch/actions/workflows/main.yml)
 
-Awesome pytorrentsearch created by lucasew
+Awesome pytorrentsearch created by 
 
 ## Install it from PyPI
 
