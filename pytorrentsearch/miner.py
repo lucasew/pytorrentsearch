@@ -61,5 +61,5 @@ def prettyprint_magnet(magnet: str):
     parsed = parse_magnet_link(magnet)
     len_trackers = len(parsed["trackers"])
     print(
-        f"{parsed['name']}\nTrackers: {str(len_trackers).rjust(3)} InfoHash: {parsed['info_hash']}\n{magnet}\n"
-    )  # noqa: E501
+        f"{parsed['name']}\nTrackers: {str(len_trackers).rjust(3)} InfoHash: {parsed['info_hash']}\n{magnet}\n"  # noqa: E501
+    )

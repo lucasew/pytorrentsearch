@@ -22,11 +22,11 @@ def query_results(query: str, page=1):
         for link in LINK_REGEXP.findall(content):
             if link.startswith("/url"):
                 if link.find("http") != -1:
-                    link = link[link.find("http") :]
+                    link = link[link.find("http"):]
                 else:
                     continue
                 if link.find("&amp"):
-                    link = link[0 : link.find("&amp")]
+                    link = link[0:link.find("&amp")]
             if link.startswith("http") and link.find("google.com") == -1:
                 page_links.add(link)
         if len(page_links) == 0:
