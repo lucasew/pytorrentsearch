@@ -10,19 +10,19 @@ Be creative! do whatever you want!
 
 
 def main():  # pragma: no cover
-    """
-    The main function executes on commands:
-    `python -m pytorrentsearch` and `$ pytorrentsearch `.
+    from argparse import ArgumentParser
+    from pytorrentsearch.search import yandex, google, duckduckgo
+    from pytorrentsearch.utils import multi_iterator_pooler
 
-    This is your program's entry point.
+    parser = ArgumentParser("pytorrentsearch")
+    parser.add_argument("query", type=str)
+    args = parser.parse_args()
+    print(args)
 
-    You can change this function to do whatever you want.
-    Examples:
-        * Run a test suite
-        * Run a server
-        * Do some other stuff
-        * Run a command line application (Click, Typer, ArgParse)
-        * List all available tasks
-        * Run an application (Flask, FastAPI, Django, etc.)
-    """
-    print("This will do something")
+    iterators = []
+    for search_backend in [ yandex, google, duckduckgo ]:
+        iterators.append(search_backend.query_results(args.query))
+
+    main_iterator = multi_iterator_pooler(*iterators)
+    for item in main_iterator:
+        print(item)
