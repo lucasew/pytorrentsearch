@@ -1,6 +1,6 @@
 import re
 
-MAGNET_REGEXP = re.compile("magnet:\?xt=[^\"']*")
+MAGNET_REGEXP = re.compile("magnet:\\?xt=[^\"']*")
 
 nontorrent_blockwords = [
     "lumendatabase.org",
@@ -16,11 +16,13 @@ nontorrent_blockwords = [
     "9gag.com"
 ]
 
+
 def is_common_nontorrent_site(url: str):
     for nontorrent_blockword in nontorrent_blockwords:
         if url.find(nontorrent_blockword) > 0:
             return True
     return False
+
 
 def mine_magnet_links(url: str):
     from pytorrentsearch.utils import get_url_content, status
@@ -38,6 +40,7 @@ def mine_magnet_links(url: str):
         ret.append(link)
     return ret
 
+
 def parse_magnet_link(url: str):
     from urllib.parse import urlparse, parse_qs
     query = urlparse(url).query
@@ -51,7 +54,8 @@ def parse_magnet_link(url: str):
         trackers = query_params['tr']
     return dict(info_hash=info_hash, name=name, trackers=trackers)
 
+
 def prettyprint_magnet(magnet: str):
     parsed = parse_magnet_link(magnet)
     len_trackers = len(parsed['trackers'])
-    print(f"{parsed['name']}\nTrackers: {str(len_trackers).rjust(3)} InfoHash: {parsed['info_hash']}\n{magnet}\n")
+    print(f"{parsed['name']}\nTrackers: {str(len_trackers).rjust(3)} InfoHash: {parsed['info_hash']}\n{magnet}\n")  # noqa: E501

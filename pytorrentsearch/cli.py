@@ -13,7 +13,8 @@ def main():  # pragma: no cover
     from argparse import ArgumentParser
     from pytorrentsearch.search import yandex, google, duckduckgo
     from pytorrentsearch.utils import multi_iterator_pooler
-    from pytorrentsearch.miner import mine_magnet_links, parse_magnet_link, prettyprint_magnet
+    from pytorrentsearch.miner import mine_magnet_links
+    from pytorrentsearch.miner import prettyprint_magnet
 
     parser = ArgumentParser("pytorrentsearch")
     parser.add_argument("query", type=str)
@@ -26,7 +27,7 @@ def main():  # pragma: no cover
             exit(0)
 
     iterators = []
-    for search_backend in [ yandex, google, duckduckgo ]:
+    for search_backend in [yandex, google, duckduckgo]:
         iterators.append(search_backend.query_results(args.query))
 
     visited_urls = {}

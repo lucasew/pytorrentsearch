@@ -2,16 +2,19 @@ import re
 
 LINK_REGEXP = re.compile("<a [^>]*href=\"([^\"]*)\"")
 
+
 def query_results(query: str, page=1):
-    from pytorrentsearch.utils import request, get_url_content, quote, status, min_wait
-    page_links = []
+    from pytorrentsearch.utils import get_url_content, status, min_wait
+    from urllib.parse import quote
+    page_links: set[str] = set()
     min_waiter = min_wait(5)
     while True:
         for link in page_links:
             yield link
         next(min_waiter)
         status("Fetching Yandex result page...")
-        content = get_url_content(f"https://yandex.com/search?text={quote(query)}&p={page}")
+        search_url = f"https://yandex.com/search?text={quote(query)}&p={page}"
+        content = get_url_content(search_url)
         with open("/tmp/preview.html", 'w') as f:
             f.write(content)
         page_links = set()
