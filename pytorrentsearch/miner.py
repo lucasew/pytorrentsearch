@@ -42,7 +42,7 @@ def parse_magnet_link(url: str):
     from urllib.parse import urlparse, parse_qs
     query = urlparse(url).query
     query_params = parse_qs(query)
-    info_hash = query_params['xt'][0].replace('urn:btih:', '')
+    info_hash = query_params['xt'][0].replace('urn:', '').replace('btih:', '')
     name = "< NO NAME >"
     if query_params.get('dn') is not None:
         name = query_params['dn'][0]
@@ -50,3 +50,8 @@ def parse_magnet_link(url: str):
     if query_params.get('tr') is not None:
         trackers = query_params['tr']
     return dict(info_hash=info_hash, name=name, trackers=trackers)
+
+def prettyprint_magnet(magnet: str):
+    parsed = parse_magnet_link(magnet)
+    len_trackers = len(parsed['trackers'])
+    print(f"{parsed['name']}\nTrackers: {str(len_trackers).rjust(3)} InfoHash: {parsed['info_hash']}\n{magnet}\n")

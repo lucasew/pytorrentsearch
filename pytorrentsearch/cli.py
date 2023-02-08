@@ -13,12 +13,17 @@ def main():  # pragma: no cover
     from argparse import ArgumentParser
     from pytorrentsearch.search import yandex, google, duckduckgo
     from pytorrentsearch.utils import multi_iterator_pooler
-    from pytorrentsearch.miner import mine_magnet_links, parse_magnet_link
+    from pytorrentsearch.miner import mine_magnet_links, parse_magnet_link, prettyprint_magnet
 
     parser = ArgumentParser("pytorrentsearch")
     parser.add_argument("query", type=str)
     args = parser.parse_args()
     print(args)
+
+    if args.query.startswith("http"):
+        for magnet in mine_magnet_links(args.query):
+            prettyprint_magnet(magnet)
+            exit(0)
 
     iterators = []
     for search_backend in [ yandex, google, duckduckgo ]:
@@ -33,9 +38,7 @@ def main():  # pragma: no cover
         try:
             magnets = mine_magnet_links(url)
             for magnet in magnets:
-                parsed = parse_magnet_link(magnet)
-                len_trackers = len(parsed['trackers'])
-                print(f"{parsed['name']}\nTrackers: {str(len_trackers).rjust(5)} InfoHash: {parsed['info_hash']}\n{magnet}\n")
+                prettyprint_magnet(magnet)
         except Exception as e:
             print(e)
             continue
