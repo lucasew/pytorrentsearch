@@ -23,10 +23,9 @@ jobs:
         run: .github/release_message.sh > release_message.md
       - name: Release
         uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           body_path: release_message.md
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     needs: release
