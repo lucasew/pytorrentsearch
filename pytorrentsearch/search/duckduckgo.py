@@ -1,11 +1,12 @@
 import re
 
-LINK_REGEXP = re.compile("<a [^>]*href=\"([^\"]*)\"")
+LINK_REGEXP = re.compile('<a [^>]*href="([^"]*)"')
 
 
 def query_results(query: str, page=1):
     from urllib.parse import quote
     from pytorrentsearch.utils import get_url_content, status, min_wait
+
     page_links: set[str] = set()
     min_waiter = min_wait(5)
     while True:
@@ -16,7 +17,7 @@ def query_results(query: str, page=1):
         status("Fetching DuckDuckGo result page...")
         search_url = f"https://html.duckduckgo.com/html/?q={quote(query)}&s={(page-1)*20}"  # noqa: E501
         content = get_url_content(search_url)
-        with open("/tmp/preview.html", 'w') as f:
+        with open("/tmp/preview.html", "w") as f:
             f.write(content)
         page_links = set()
         for link in LINK_REGEXP.findall(content):

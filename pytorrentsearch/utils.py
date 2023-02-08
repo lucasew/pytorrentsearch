@@ -1,32 +1,38 @@
 def status(message: str):
     from sys import stderr
+
     print(f"[*] {message}", file=stderr)
 
 
 def request(url: str, timeout=10):
     from urllib.request import urlopen, Request
-    req = Request(url,
-                  headers={
-                      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'  # noqa: E501
-                  })
+
+    req = Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36"  # noqa: E501
+        },
+    )
     res = urlopen(req, timeout=timeout)
     return res
 
 
 def get_url_content(url: str, timeout=10):
-    return request(url, timeout=timeout).read().decode('utf8')
+    return request(url, timeout=timeout).read().decode("utf8")
 
 
 def multi_iterator_pooler(*iterators):
     import queue
     from threading import Thread
     from time import sleep
+
     q = queue.Queue(maxsize=len(iterators))
     threads = []
 
     def worker(iterator):
         while True:
             q.put(next(iterator))
+
     for iterator in iterators:
         threads.append(Thread(target=worker, args=[iterator]))
     for thread in threads:
@@ -46,6 +52,7 @@ def multi_iterator_pooler(*iterators):
 
 def min_wait(seconds):
     from time import time, sleep
+
     last_time = time()
     yield None
     while True:
