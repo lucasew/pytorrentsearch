@@ -24,7 +24,7 @@ def main():  # pragma: no cover
     if args.query.startswith("http"):
         for magnet in mine_magnet_links(args.query):
             prettyprint_magnet(magnet)
-            exit(0)
+        exit(0)
 
     iterators = []
     for search_backend in [yandex, google, duckduckgo]:
