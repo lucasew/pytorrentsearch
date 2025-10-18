@@ -1,6 +1,6 @@
 [tools]
-uv = "latest"
-ruff = "latest"
+uv = "0.8.17"
+ruff = "0.14.0"
 
 [tasks.fmt]
 description = "Format code using ruff"
