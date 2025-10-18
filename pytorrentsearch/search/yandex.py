@@ -4,8 +4,9 @@ LINK_REGEXP = re.compile('<a [^>]*href="([^"]*)"')
 
 
 def query_results(query: str, page=1):
-    from pytorrentsearch.utils import get_url_content, status, min_wait
     from urllib.parse import quote
+
+    from pytorrentsearch.utils import get_url_content, min_wait, status
 
     page_links: set[str] = set()
     min_waiter = min_wait(5)

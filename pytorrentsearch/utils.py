@@ -5,7 +5,7 @@ def status(message: str):
 
 
 def request(url: str, timeout=10):
-    from urllib.request import urlopen, Request
+    from urllib.request import Request, urlopen
 
     req = Request(
         url,
@@ -51,7 +51,7 @@ def multi_iterator_pooler(*iterators):
 
 
 def min_wait(seconds):
-    from time import time, sleep
+    from time import sleep, time
 
     last_time = time()
     yield None

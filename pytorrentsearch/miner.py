@@ -25,8 +25,9 @@ def is_common_nontorrent_site(url: str):
 
 
 def mine_magnet_links(url: str):
-    from pytorrentsearch.utils import get_url_content, status
     from urllib.parse import unquote
+
+    from pytorrentsearch.utils import get_url_content, status
 
     if is_common_nontorrent_site(url):
         status(f"[crawler/ENONTORRNET] {url}")
@@ -43,7 +44,7 @@ def mine_magnet_links(url: str):
 
 
 def parse_magnet_link(url: str):
-    from urllib.parse import urlparse, parse_qs
+    from urllib.parse import parse_qs, urlparse
 
     query = urlparse(url).query
     query_params = parse_qs(query)
