@@ -16,7 +16,7 @@ Repository = "https://github.com/lucasew/pytorrentsearch"
 [project.scripts]
 pytorrentsearch = "pytorrentsearch.cli:main"
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "pytest",
     "pytest-cov",
