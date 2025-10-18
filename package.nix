@@ -1,9 +1,12 @@
-{ buildPythonPackage, pytest }:
+{ buildPythonPackage, hatchling, pytest, pytest-cov, mypy }:
 buildPythonPackage {
   pname = "pytorrentsearch";
   version = builtins.readFile ./pytorrentsearch/VERSION;
 
+  pyproject = true;
   src = ./.;
 
-  checkInputs = [ pytest ];
+  build-system = [ hatchling ];
+
+  nativeCheckInputs = [ pytest pytest-cov mypy ];
 }
