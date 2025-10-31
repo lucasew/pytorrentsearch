@@ -1,6 +1,6 @@
 [tools]
 uv = "0.9.6"
-ruff = "0.14.2"
+ruff = "0.14.3"
 
 [tasks.fmt]
 description = "Format code using ruff"
