@@ -32,7 +32,7 @@ jobs:
       id-token: write
       pull-requests: write
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
 
     - name: Setup git config
       run: |
@@ -40,7 +40,7 @@ jobs:
         git config user.email actions-bot@users.noreply.github.com
 
     - name: Setup mise
-      uses: jdx/mise-action@v3
+      uses: jdx/mise-action@d16887ba50704baed7de72bd1e82e04391e4457a # v3
       with:
         experimental: true
 
