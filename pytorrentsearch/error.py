@@ -1,5 +1,6 @@
 import sys
 import traceback
+from typing import Optional
 
 
 def report_error(exception: Exception, context: Optional[dict] = None):
