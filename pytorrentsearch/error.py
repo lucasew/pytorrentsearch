@@ -2,7 +2,7 @@ import sys
 import traceback
 
 
-def report_error(exception: Exception, context: dict = None):
+def report_error(exception: Exception, context: Optional[dict] = None):
     """
     Centralized error reporting.
 
