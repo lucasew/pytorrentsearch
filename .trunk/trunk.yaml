@@ -27,18 +27,14 @@ lint:
     - bandit@1.9.3
     - black@26.1.0
     - checkov@3.2.504
-    - git-diff-check
     - isort@8.0.0
     - markdownlint@0.47.0
     - mypy@1.19.1
     - prettier@3.8.1
-    - renovate@43.26.4
     - ruff@0.15.2
     - shellcheck@0.11.0
     - shfmt@3.6.0
     - taplo@0.10.0
-    - trufflehog@3.93.4
     - yamllint@1.38.0
 actions:
-  enabled:
-    - trunk-upgrade-available
+  enabled: []
