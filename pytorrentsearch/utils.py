@@ -30,8 +30,21 @@ def multi_iterator_pooler(*iterators):
     threads = []
 
     def worker(iterator):
+        from pytorrentsearch.error import report_error
+
         while True:
-            q.put(next(iterator))
+            try:
+                item = next(iterator)
+            except StopIteration:
+                break
+            except Exception as e:
+                report_error(e)
+                break
+            try:
+                q.put(item)
+            except Exception as e:
+                report_error(e)
+                break
 
     for iterator in iterators:
         threads.append(Thread(target=worker, args=[iterator]))
