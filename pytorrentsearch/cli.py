@@ -12,6 +12,7 @@ Be creative! do whatever you want!
 def main():  # pragma: no cover
     from argparse import ArgumentParser
 
+    from pytorrentsearch.error import report_error
     from pytorrentsearch.miner import mine_magnet_links, prettyprint_magnet
     from pytorrentsearch.search import duckduckgo, google, yandex
     from pytorrentsearch.utils import multi_iterator_pooler
@@ -41,7 +42,7 @@ def main():  # pragma: no cover
             for magnet in magnets:
                 prettyprint_magnet(magnet)
         except Exception as e:
-            print(e)
+            report_error(e, {"url": url})
             continue
         finally:
             visited_urls[url] = True

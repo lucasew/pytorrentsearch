@@ -3,24 +3,24 @@ name: Autorelease
 on:
   push:
     branches:
-    - main
+      - main
     tags:
-    - '*'
+      - "*"
   pull_request:
     branches:
-    - main
+      - main
   workflow_dispatch:
     inputs:
       new_version:
-        description: 'New tag version'
-        default: 'patch'
+        description: "New tag version"
+        default: "patch"
         type: choice
         options:
-        - patch
-        - minor
-        - major
+          - patch
+          - minor
+          - major
   schedule:
-  - cron: '0 2 * * 6'   # saturday 2am
+    - cron: "0 2 * * 6"
 
 jobs:
   autorelease:
@@ -32,67 +32,74 @@ jobs:
       id-token: write
       pull-requests: write
     steps:
-    - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          fetch-depth: 0
 
-    - name: Setup git config
-      run: |
-        git config user.name actions-bot
-        git config user.email actions-bot@users.noreply.github.com
+      - name: Setup git config
+        run: |
+          git config user.name actions-bot
+          git config user.email actions-bot@users.noreply.github.com
 
-    - name: Setup mise
-      uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
-      with:
-        experimental: true
+      - name: Setup mise
+        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
+        with:
+          experimental: true
 
-    - name: Install tools and dependencies
-      run: |
-        mise install
-        uv sync
+      - name: Install
+        run: mise run install
 
-    - name: Run linter
-      run: mise run lint
+      - name: Codegen
+        run: mise run codegen
 
-    - name: Run tests
-      run: mise run test
+      - name: Check for changes and PR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            git checkout -b "chore/codegen-${{ github.run_id }}"
+            git add .
+            git commit -m "chore: update generated code"
+            git push origin "chore/codegen-${{ github.run_id }}"
+            gh pr create --title "chore: update generated code" --body "Automated codegen updates" --base main --head "chore/codegen-${{ github.run_id }}"
+          fi
 
-    # - name: Upload coverage to Codecov
-    #   uses: codecov/codecov-action@v4
-    #   with:
-    #     files: ./coverage.xml
-    #     fail_ci_if_error: false
+      - name: CI
+        run: mise run ci
 
-    - name: Make release if everything looks right
-      if: github.event_name != 'pull_request'
-      env:
-        NEW_VERSION: ${{ github.event.inputs.new_version }}
-      run: |
-        if [[ ! -z "$NEW_VERSION" ]]; then
-          NO_TAG=1 ./make_release "$NEW_VERSION"
-          echo "New version: $(cat pytorrentsearch/VERSION)" >> $GITHUB_STEP_SUMMARY
-          echo "RELEASE_VERSION=$(cat pytorrentsearch/VERSION)" >> $GITHUB_ENV
-        fi
+      - name: Make release if everything looks right
+        if: github.event_name != 'pull_request'
+        env:
+          NEW_VERSION: ${{ github.event.inputs.new_version }}
+        run: |
+          if [[ ! -z "$NEW_VERSION" ]]; then
+            NO_TAG=1 ./make_release "$NEW_VERSION"
+            echo "New version: $(cat pytorrentsearch/VERSION)" >> $GITHUB_STEP_SUMMARY
+            echo "RELEASE_VERSION=$(cat pytorrentsearch/VERSION)" >> $GITHUB_ENV
+          fi
 
-    - name: Create release
-      if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TAG: ${{ env.RELEASE_VERSION }}
-        TITLE: Release ${{ env.RELEASE_VERSION }}
-      run: |
-        gh release create "$TAG" \
-          --title "$TITLE" \
-          --generate-notes \
-          --notes-start-tag $(gh release list --limit 1 --json tagName -q .[].tagName)
+      - name: Create release
+        if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ env.RELEASE_VERSION }}
+          TITLE: Release ${{ env.RELEASE_VERSION }}
+        run: |
+          gh release create "$TAG" \
+            --title "$TITLE" \
+            --generate-notes \
+            --notes-start-tag $(gh release list --limit 1 --json tagName -q .[].tagName)
 
-    - name: Build package
-      if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
-      run: mise run build
+      - name: Build package
+        if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
+        run: mise run build
 
-    - name: Publish to PyPI
-      if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        uv tool install twine
-        uv tool run twine upload dist/*
+      - name: Publish to PyPI
+        if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          uv tool install twine
+          uv tool run twine upload dist/*
