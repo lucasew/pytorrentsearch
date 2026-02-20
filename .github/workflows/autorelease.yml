@@ -12,15 +12,15 @@ on:
   workflow_dispatch:
     inputs:
       new_version:
-        description: "New tag version"
-        default: "patch"
+        description: New tag version
+        default: patch
         type: choice
         options:
           - patch
           - minor
           - major
   schedule:
-    - cron: "0 2 * * 6"
+    - cron: 0 2 * * 6
 
 jobs:
   autorelease:

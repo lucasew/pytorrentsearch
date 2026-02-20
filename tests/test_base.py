@@ -2,4 +2,4 @@ from pytorrentsearch.base import NAME
 
 
 def test_base():
-    assert NAME == "pytorrentsearch"
+    assert NAME == "pytorrentsearch"  # nosec B101
