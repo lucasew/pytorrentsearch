@@ -1,4 +1,7 @@
 import re
+from urllib.parse import parse_qs, unquote, urlparse
+
+from pytorrentsearch.utils import get_url_content, status
 
 MAGNET_REGEXP = re.compile("magnet:\\?xt=[^\"']*")
 
@@ -25,10 +28,6 @@ def is_common_nontorrent_site(url: str):
 
 
 def mine_magnet_links(url: str):
-    from urllib.parse import unquote
-
-    from pytorrentsearch.utils import get_url_content, status
-
     if is_common_nontorrent_site(url):
         status(f"[crawler/ENONTORRNET] {url}")
         return []
@@ -44,8 +43,6 @@ def mine_magnet_links(url: str):
 
 
 def parse_magnet_link(url: str):
-    from urllib.parse import parse_qs, urlparse
-
     query = urlparse(url).query
     query_params = parse_qs(query)
     info_hash = query_params["xt"][0].replace("urn:", "").replace("btih:", "")

@@ -1,0 +1,1 @@
+- 2026-02-21: Centralized error handling via pytorrentsearch.error.report_error is mandatory, and debug prints should be avoided.

@@ -8,23 +8,26 @@ Be creative! do whatever you want!
 - Import things from your .base module
 """
 
+from argparse import ArgumentParser
+
+from pytorrentsearch.error import report_error
+from pytorrentsearch.miner import mine_magnet_links, prettyprint_magnet
+from pytorrentsearch.search import duckduckgo, google, yandex
+from pytorrentsearch.utils import multi_iterator_pooler
+
 
 def main():  # pragma: no cover
-    from argparse import ArgumentParser
-
-    from pytorrentsearch.error import report_error
-    from pytorrentsearch.miner import mine_magnet_links, prettyprint_magnet
-    from pytorrentsearch.search import duckduckgo, google, yandex
-    from pytorrentsearch.utils import multi_iterator_pooler
-
     parser = ArgumentParser("pytorrentsearch")
     parser.add_argument("query", type=str)
     args = parser.parse_args()
-    print(args)
 
     if args.query.startswith("http"):
-        for magnet in mine_magnet_links(args.query):
-            prettyprint_magnet(magnet)
+        try:
+            for magnet in mine_magnet_links(args.query):
+                prettyprint_magnet(magnet)
+        except Exception as e:
+            report_error(e)
+            exit(1)
         exit(0)
 
     iterators = []

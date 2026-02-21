@@ -1,12 +1,17 @@
-def status(message: str):
-    from sys import stderr
+import queue
+from sys import stderr
+from threading import Thread
+from time import sleep, time
+from urllib.request import Request, urlopen
 
+from pytorrentsearch.error import report_error
+
+
+def status(message: str):
     print(f"[*] {message}", file=stderr)
 
 
 def request(url: str, timeout=10):
-    from urllib.request import Request, urlopen
-
     req = Request(
         url,
         headers={
@@ -22,16 +27,10 @@ def get_url_content(url: str, timeout=10):
 
 
 def multi_iterator_pooler(*iterators):
-    import queue
-    from threading import Thread
-    from time import sleep
-
     q = queue.Queue(maxsize=len(iterators))
     threads = []
 
     def worker(iterator):
-        from pytorrentsearch.error import report_error
-
         while True:
             try:
                 item = next(iterator)
@@ -64,8 +63,6 @@ def multi_iterator_pooler(*iterators):
 
 
 def min_wait(seconds):
-    from time import sleep, time
-
     last_time = time()
     yield None
     while True:
