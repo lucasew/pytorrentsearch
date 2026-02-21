@@ -18,6 +18,18 @@ nontorrent_blockwords = [
 
 
 def is_common_nontorrent_site(url: str):
+    """
+    Checks if a URL belongs to a site known to not host torrents.
+
+    This filter prevents the crawler from wasting resources on sites like
+    Google, Facebook, or Reddit, which are unlikely to contain magnet links.
+
+    Args:
+        url (str): The URL to check.
+
+    Returns:
+        bool: True if the URL contains a blocked domain, False otherwise.
+    """
     for nontorrent_blockword in nontorrent_blockwords:
         if url.find(nontorrent_blockword) > 0:
             return True
@@ -25,6 +37,23 @@ def is_common_nontorrent_site(url: str):
 
 
 def mine_magnet_links(url: str):
+    """
+    Extracts magnet links from a given URL's content.
+
+    Fetches the page content and scans for strings matching the magnet link
+    pattern. It automatically skips known non-torrent sites.
+
+    Args:
+        url (str): The web page URL to scrape.
+
+    Returns:
+        list[str]: A list of found magnet links, decoded and sanitized.
+                   Returns an empty list if the site is blocked.
+
+    Side Effects:
+        - Logs status messages to stderr via `utils.status`.
+        - Performs an HTTP request to fetch the URL content.
+    """
     from urllib.parse import unquote
 
     from pytorrentsearch.utils import get_url_content, status
@@ -44,6 +73,22 @@ def mine_magnet_links(url: str):
 
 
 def parse_magnet_link(url: str):
+    """
+    Parses a magnet URI into its constituent components.
+
+    Extracts the display name (dn), info hash (xt), and trackers (tr)
+    from the magnet link query parameters.
+
+    Args:
+        url (str): The magnet URI string.
+
+    Returns:
+        dict: A dictionary containing:
+            - info_hash (str): The BTIH hash.
+            - name (str): The display name of the torrent, or "< NO NAME >"
+              if missing.
+            - trackers (list[str]): A list of tracker URLs.
+    """
     from urllib.parse import parse_qs, urlparse
 
     query = urlparse(url).query
@@ -59,6 +104,18 @@ def parse_magnet_link(url: str):
 
 
 def prettyprint_magnet(magnet: str):
+    """
+    Prints a formatted summary of a magnet link to stdout.
+
+    Displays the torrent name, tracker count, info hash, and the raw magnet
+    link.
+
+    Args:
+        magnet (str): The magnet URI string to print.
+
+    Side Effects:
+        - Writes formatted text to stdout.
+    """
     parsed = parse_magnet_link(magnet)
     len_trackers = len(parsed["trackers"])
     print(

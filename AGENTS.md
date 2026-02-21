@@ -9,3 +9,13 @@
 ## Testing
 - **Tests Must Earn Their Place:** If you write a test, it must test something you actually implemented or changed — your own logic, your own edge cases. Do not write tests that just exercise external libraries or restate what the library's own tests already cover. A test that doesn't catch a real bug in your code is noise.
 - **Test Beyond Automation:** Passing lint and unit tests is the baseline, not the finish line. After automated checks pass, do a manual sanity check: build the project, trace the code path you changed, think about what a user would actually hit.
+
+## Documentation
+- **Format:** All docstrings must follow the [Google Style Guide](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
+- **Scope:** Every exported function, class, and method must have a docstring.
+- **Content:**
+  - **Why:** Explain the purpose and non-obvious details.
+  - **Parameters:** List arguments with types and descriptions.
+  - **Returns:** Describe the return value.
+  - **Side Effects:** Mention I/O, exceptions raised, or global state changes.
+- **No Obvious Comments:** Avoid redundant descriptions (e.g., "Returns user" for `get_user`). Explain *how* it retrieves the user (e.g., "Retrieves user from cache, falling back to DB").
